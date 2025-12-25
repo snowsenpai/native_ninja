@@ -1,21 +1,27 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Link } from 'expo-router'
-import Logo from '../assets/favicon.png'
+import ThemedLogo from '../components/ThemedLogo'
+import ThemedView from '../components/ThemedView'
+import Spacer from '../components/Spacer'
+import ThemedText from '../components/ThemedText'
 
 const Home = () => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Ryoiki Tenkai</Text>
-            <Image source={Logo} style={styles.img}></Image>
-            <Text style={[styles.content, { color: 'purple' }]}>Clients and Servers something</Text>
-            <View style={styles.card}>
-                <Text style={styles.content}>To Be Continued...</Text>
-            </View>
-            <View>
-                <Link href="/about" style={styles.button}>About Page</Link>
-                <Link href="/contact" style={styles.button}>Contact Page</Link>
-            </View>
-        </View>
+        <>
+            <ThemedView style={styles.container}>
+                <ThemedText style={styles.title} title={true}>Ryoiki Tenkai</ThemedText>
+                <ThemedLogo style={styles.img} />
+                <Spacer height={20} />
+                <ThemedText style={[styles.content, { color: 'purple' }]}>Clients and Servers something</ThemedText>
+                <ThemedView style={styles.card}>
+                    <ThemedText style={styles.content}>To Be Continued...</ThemedText>
+                </ThemedView>
+                <ThemedView>
+                    <Link href="/login" style={styles.button}><ThemedText>Login Page</ThemedText></Link>
+                    <Link href="/register" style={styles.button}><ThemedText>Register Page</ThemedText></Link>
+                </ThemedView>
+            </ThemedView>
+        </>
     )
 }
 
@@ -36,13 +42,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
     },
-    img: {
-        width: 100,
-        height: 100,
-        marginBottom: 20,
-    },
     card: {
-        backgroundColor: 'eee',
+        backgroundColor: '#100909ff',
         padding: 20,
         marginVertical: 10,
         borderRadius: 10,
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
         padding: 10,
-        backgroundColor: 'grey',
         borderRadius: 5,
     }
 })
