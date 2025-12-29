@@ -13,16 +13,20 @@ import { useUser } from '../../hooks/useUser'
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(null)
 
-    const {login} = useUser()
+
+    const { login } = useUser()
 
     const handleSubmit = async () => {
+        setError(null)
+
         try {
             console.log('Login submitted:', { email, password })
             await login(email, password)
             console.log('Login successful')
         } catch (error) {
-            console.log('Login error:', error.message)
+            setError(error.message)
         }
     }
 
@@ -50,9 +54,13 @@ const Login = () => {
                     value={password}
                 />
 
-                <ThemedButton style={{ width: '40%'}} onPress={handleSubmit}>
+                <ThemedButton style={{ width: '40%' }} onPress={handleSubmit}>
                     <Text style={{ color: '#f2f2f2', textAlign: 'center' }}>Login</Text>
                 </ThemedButton>
+
+                <Spacer />
+
+                {error && <ThemedText style={styles.error}>{error}</ThemedText>}
 
                 <Spacer height={100} />
 
@@ -89,5 +97,14 @@ const styles = StyleSheet.create({
     },
     pressed: {
         opacity: 0.8
+    },
+    error: {
+        color: Colors.warning,
+        padding: 10,
+        backgroundColor: '#f5c1c8',
+        borderColor: Colors.warning,
+        borderWidth: 1,
+        borderRadius: 6,
+        marginHorizontal: 10,
     }
 })

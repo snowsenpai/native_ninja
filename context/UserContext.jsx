@@ -12,7 +12,7 @@ export function UserProvider({ children }) {
             const session = await account.createEmailPasswordSession({ email, password });
             setUser(session);
         } catch (error) {
-            console.log('Login context error:', error.message);
+            throw new Error(error.message)
         }
     }
 
@@ -21,7 +21,7 @@ export function UserProvider({ children }) {
             const user = await account.create({ userId: ID.unique(), email, password });
             setUser(user);
         } catch (error) {
-            console.log('Register context error:', error.message);
+            throw new Error(error.message)
         }
     }
 

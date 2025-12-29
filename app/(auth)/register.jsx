@@ -8,20 +8,25 @@ import ThemedButton from '../../components/ThemedButton'
 import Spacer from '../../components/Spacer'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import { useUser } from '../../hooks/useUser'
+import { Colors } from '../../constants/Colors'
 
 const Register = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(null)
 
-    const {register, user} = useUser()
+    const { register, user } = useUser()
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
+        // Clear previous error
+        setError(null)
+
         try {
             console.log('Register submitted:', { email, password })
             await register(email, password)
             console.log('Register successful')
         } catch (error) {
-            console.log('Registration error:', error.message)
+            setError(error.message)
         }
     }
 
@@ -53,6 +58,10 @@ const Register = () => {
                     <Text style={{ color: '#f2f2f2', textAlign: 'center' }}>Register</Text>
                 </ThemedButton>
 
+                <Spacer />
+
+                {error && <ThemedText style={styles.error}>{error}</ThemedText>}
+
                 <Spacer height={100} />
 
                 <ThemedText style={{ textAlign: 'center' }}>
@@ -81,5 +90,14 @@ const styles = StyleSheet.create({
     link: {
         textAlign: 'center',
         textDecorationLine: 'underline',
+    },
+    error: {
+        color: Colors.warning,
+        padding: 10,
+        backgroundColor: '#f5c1c8',
+        borderColor: Colors.warning,
+        borderWidth: 1,
+        borderRadius: 6,
+        marginHorizontal: 10,
     }
 })
