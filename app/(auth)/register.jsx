@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useState } from 'react'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 
 import ThemedText from '../../components/ThemedText'
 import ThemedView from '../../components/ThemedView'
@@ -16,15 +16,15 @@ const Register = () => {
     const [error, setError] = useState(null)
 
     const { register, user } = useUser()
+    const router = useRouter()
 
     const handleSubmit = async () => {
         // Clear previous error
         setError(null)
 
         try {
-            console.log('Register submitted:', { email, password })
             await register(email, password)
-            console.log('Register successful')
+            router.push('/profile')
         } catch (error) {
             setError(error.message)
         }

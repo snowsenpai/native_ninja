@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useState } from 'react'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 
 import ThemedText from '../../components/ThemedText'
 import ThemedView from '../../components/ThemedView'
@@ -15,16 +15,15 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
 
-
+    const router = useRouter()
     const { login } = useUser()
 
     const handleSubmit = async () => {
         setError(null)
 
         try {
-            console.log('Login submitted:', { email, password })
             await login(email, password)
-            console.log('Login successful')
+            router.push('/profile')
         } catch (error) {
             setError(error.message)
         }
@@ -68,6 +67,7 @@ const Login = () => {
                     Don't have an account?
                     <Link href="/register"> Register</Link>
                 </ThemedText>
+
             </ThemedView>
         </TouchableWithoutFeedback>
     )
