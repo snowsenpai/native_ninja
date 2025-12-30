@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { account } from '../lib/appwrite';
 import { ID } from 'react-native-appwrite';
 import { useRouter } from 'expo-router';
@@ -7,6 +7,8 @@ export const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
+    const [authChecked, setAuthChecked] = useState(false);
+
     const router = useRouter();
 
     async function login(email, password) {
@@ -38,8 +40,23 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function initUser() {
+        try {
+            const response = await account.get();
+            setUser(response);
+        } catch (error) {
+            setUser(null)
+        } finally {
+            setAuthChecked(true);
+        }
+    }
+
+    useEffect(() => {
+        initUser();
+    }, []);
+
     return (
-        <UserContext.Provider value={{ user, login, register, logout }}>
+        <UserContext.Provider value={{ user, login, register, logout, authChecked }}>
             {children}
         </UserContext.Provider>
     );
