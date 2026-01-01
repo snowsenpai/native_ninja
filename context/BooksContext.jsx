@@ -11,7 +11,7 @@ export const BooksContext = createContext(null);
 
 export function BooksProvider({ children }) {
     const [books, setBooks] = useState([]);
-    const {user} = useUser();
+    const { user } = useUser();
 
     async function fetchBooks() {
         try {
@@ -29,7 +29,11 @@ export function BooksProvider({ children }) {
 
     async function fetchBookById(id) {
         try {
-
+            const response = await databases.getRow({
+                databaseId: DATABASE_ID,
+                tableId: BOOKS_TABLE_ID,
+                rowId: id
+            })
 
             return response
         } catch (error) {
@@ -61,7 +65,11 @@ export function BooksProvider({ children }) {
 
     async function deleteBook(id) {
         try {
-
+            await databases.deleteRow({
+                databaseId: DATABASE_ID,
+                tableId: BOOKS_TABLE_ID,
+                rowId: id
+            })
         } catch (error) {
             console.log(error.message)
         }
@@ -75,10 +83,14 @@ export function BooksProvider({ children }) {
             fetchBooks()
 
             unsubscribe = client.subscribe(channel, (response) => {
-                const {payload, events} = response
+                const { payload, events } = response
 
                 if (events[0].includes("create")) {
                     setBooks((prevBooks) => [payload, ...prevBooks])
+                }
+
+                if (events[0].includes("delete")) {
+                    setBooks((prevBooks) => prevBooks.filter((book) => book.$id !== payload.$id))
                 }
             })
         } else {

@@ -9,7 +9,7 @@ const ThemedCard = ({ style, ...props }) => {
         <View
             style={[
                 {
-                    backgroundColor: theme.backGround
+                    backgroundColor: theme.uiBackground
                 },
                 styles.card,
                 style
@@ -25,7 +25,5 @@ const styles = StyleSheet.create({
     card: {
         borderRadius: 10,
         padding: 20,
-        marginVertical: 10,
-        shadowColor: "#000",
     }
 })
