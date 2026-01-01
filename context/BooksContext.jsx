@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import Constants from 'expo-constants';
-import { databases } from '../lib/appwrite';
+import { databases, client } from '../lib/appwrite';
 import { useUser } from '../hooks/useUser';
 import { Permission, Role, ID, Query } from 'react-native-appwrite';
 
@@ -21,7 +21,6 @@ export function BooksProvider({ children }) {
                 queries: [Query.equal('userId', user.$id)]
             });
             setBooks(response.rows)
-            console.log(response.rows)
             return response.rows
         } catch (error) {
             console.error(error.message)
@@ -40,7 +39,6 @@ export function BooksProvider({ children }) {
 
     async function createBook(data) {
         try {
-            console.log('user.$id', user.$id)
             const newBook = await databases.createRow({
                 databaseId: DATABASE_ID,
                 tableId: BOOKS_TABLE_ID,
@@ -70,10 +68,25 @@ export function BooksProvider({ children }) {
     }
 
     useEffect(() => {
+        let unsubscribe;
+        const channel = `databases.${DATABASE_ID}.tables.${BOOKS_TABLE_ID}.rows`;
+
         if (user) {
             fetchBooks()
+
+            unsubscribe = client.subscribe(channel, (response) => {
+                const {payload, events} = response
+
+                if (events[0].includes("create")) {
+                    setBooks((prevBooks) => [payload, ...prevBooks])
+                }
+            })
         } else {
             setBooks([])
+        }
+
+        return () => {
+            if (unsubscribe) unsubscribe();
         }
     }, [user])
 
