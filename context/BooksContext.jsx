@@ -1,8 +1,8 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import Constants from 'expo-constants';
 import { databases } from '../lib/appwrite';
 import { useUser } from '../hooks/useUser';
-import { Permission, Role, ID } from 'react-native-appwrite';
+import { Permission, Role, ID, Query } from 'react-native-appwrite';
 
 const DATABASE_ID = Constants.expoConfig.extra.appwriteDatabaseId;
 const BOOKS_TABLE_ID = Constants.expoConfig.extra.appwriteBooksTableId;
@@ -15,7 +15,14 @@ export function BooksProvider({ children }) {
 
     async function fetchBooks() {
         try {
-
+            const response = await databases.listRows({
+                databaseId: DATABASE_ID,
+                tableId: BOOKS_TABLE_ID,
+                queries: [Query.equal('userId', user.$id)]
+            });
+            setBooks(response.rows)
+            console.log(response.rows)
+            return response.rows
         } catch (error) {
             console.error(error.message)
         }
@@ -33,6 +40,7 @@ export function BooksProvider({ children }) {
 
     async function createBook(data) {
         try {
+            console.log('user.$id', user.$id)
             const newBook = await databases.createRow({
                 databaseId: DATABASE_ID,
                 tableId: BOOKS_TABLE_ID,
@@ -60,6 +68,14 @@ export function BooksProvider({ children }) {
             console.log(error.message)
         }
     }
+
+    useEffect(() => {
+        if (user) {
+            fetchBooks()
+        } else {
+            setBooks([])
+        }
+    }, [user])
 
     return (
         <BooksContext.Provider
