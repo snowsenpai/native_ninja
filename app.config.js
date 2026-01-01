@@ -9,6 +9,8 @@ export default {
       appwriteProjectName: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_NAME,
       appwriteEndpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
       appwritePlatform: process.env.EXPO_PUBLIC_APPWRITE_PLATFORM,
+      appwriteDatabaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
+      appwriteBooksTableId: process.env.EXPO_PUBLIC_APPWRITE_BOOKS_TABLE_ID,
     }
   }
 }

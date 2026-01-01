@@ -13,7 +13,7 @@ const Profile = () => {
         <ThemedView style={styles.container}>
 
             <ThemedText title={true} style={styles.heading}>
-                {user.email}
+                {user.email ? user.email : user.providerUid}
             </ThemedText>
             <Spacer />
 
